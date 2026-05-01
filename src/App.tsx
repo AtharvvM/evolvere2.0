@@ -992,21 +992,7 @@ function PaymentModal({
     ? ["1 Digital Guide PDF", "Basic Niche Selection", "Email Delivery", "30-Day Access"]
     : ["5 Digital Guide PDFs", "All 10 Premium Niches", "Priority Email Delivery", "Lifetime Access", "Exclusive Framework Templates", "Monthly New Guide"];
 
-  const handleRazorpay = () => {
-    const options = {
-      key: "rzp_test_placeholder",
-      amount: Math.round(BASE_SCHOLAR_INR * 100) * (plan === "sage" ? 2 : 1),
-      currency: "INR",
-      name: "Evolvere AI",
-      description: `${planName} Plan – Premium Digital Guide`,
-      image: "",
-      handler: function () {
-        alert(`✅ Payment Successful! Your ${planName} plan is now active. Check your email for your premium guides.`);
-        onClose();
-      },
-      prefill: { email: "", contact: "" },
-      theme: { color: "#7c3aed" },
-    };
+  
     try {
       // @ts-ignore
       const rzp = new window.Razorpay(options);
@@ -1014,7 +1000,24 @@ function PaymentModal({
     } catch {
       alert(`Payment gateway loaded! In production, this would process ₹${plan === "scholar" ? BASE_SCHOLAR_INR : BASE_SAGE_INR} via Razorpay.\n\n✅ Demo: Payment Successful for ${planName} Plan!`);
       onClose();
-    }
+    }const options = {
+      // ✅ Ab ye Vercel se tumhari verified key uthayega
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID, 
+      amount: Math.round(price * 100), 
+      currency: "INR",
+      name: "Evolvere AI",
+      description: `${planName} Plan – Premium Digital Guide`,
+      image: "",
+      handler: function (response: any) {
+        alert(`✅ Payment Successful! Payment ID: ${response.razorpay_payment_id}`);
+        onClose();
+      },
+      prefill: { 
+        name: "Aditya", 
+        email: "atharv.2006@gmail.com" 
+      },
+      theme: { color: "#7c3aed" },
+    };
   };
 
   const handleStripe = () => {
