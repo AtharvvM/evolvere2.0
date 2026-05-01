@@ -992,17 +992,11 @@ function PaymentModal({
     ? ["1 Digital Guide PDF", "Basic Niche Selection", "Email Delivery", "30-Day Access"]
     : ["5 Digital Guide PDFs", "All 10 Premium Niches", "Priority Email Delivery", "Lifetime Access", "Exclusive Framework Templates", "Monthly New Guide"];
 
-  
-    try {
+  // ✅ Razorpay Function start
+  const handleRazorpay = () => {
+    const options = {
       // @ts-ignore
-      const rzp = new window.Razorpay(options);
-      rzp.open();
-    } catch {
-      alert(`Payment gateway loaded! In production, this would process ₹${plan === "scholar" ? BASE_SCHOLAR_INR : BASE_SAGE_INR} via Razorpay.\n\n✅ Demo: Payment Successful for ${planName} Plan!`);
-      onClose();
-    }const options = {
-      // ✅ Ab ye Vercel se tumhari verified key uthayega
-      key: import.meta.env.VITE_RAZORPAY_KEY_ID, 
+      key: (import.meta as any).env.VITE_RAZORPAY_KEY_ID,
       amount: Math.round(price * 100), 
       currency: "INR",
       name: "Evolvere AI",
@@ -1018,7 +1012,16 @@ function PaymentModal({
       },
       theme: { color: "#7c3aed" },
     };
-  };
+
+    try {
+      // @ts-ignore
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (err) {
+      console.error("Razorpay Error:", err);
+      alert("Payment gateway failed to load. Please try again.");
+    }
+  }; // ✅ Razorpay Function end
 
   const handleStripe = () => {
     setTimeout(() => {
@@ -1026,6 +1029,8 @@ function PaymentModal({
       onClose();
     }, 1500);
   };
+
+  // Niche return statement aur modal UI aayega...
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
