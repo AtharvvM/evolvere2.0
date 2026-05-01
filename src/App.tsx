@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { signInWithGoogle } from "./firebaseConfig";
 import { jsPDF } from "jspdf";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -1368,6 +1369,20 @@ export default function App() {
   const [activeSection, setActiveSection] = useState<"home" | "pricing" | "generator">("home");
   const heroRef = useRef<HTMLDivElement>(null);
 
+  
+  // --- Google Login Function ---
+  const handleLogin = async () => {
+    try {
+      const result: any = await signInWithGoogle();
+      const user = result?.user || result;
+      if (user) {
+        alert(`Oye ${user.displayName || 'User'}, Evolvere AI mein swagat hai!`);
+      }
+    } catch (error) {
+      console.error("Login Error:", error);
+    }
+  };
+
   // IP Detection & Pricing
   useEffect(() => {
     fetch("https://ipapi.co/json/")
@@ -1447,15 +1462,16 @@ export default function App() {
                 <span className="text-xs text-violet-400 font-bold">{pricing.symbol}{pricing.scholar}</span>
               </div>
             )}
-            <button
-              onClick={() => setPaymentModal({ open: true, plan: "sage" })}
-              className="bg-gradient-to-r from-violet-600 to-purple-600 text-white text-sm font-semibold px-4 py-2 rounded-full hover:shadow-lg hover:shadow-violet-500/30 transition-all"
-            >
-              Get Started
-            </button>
+            <button 
+  onClick={handleLogin}
+  className="bg-gradient-to-r from-violet-600 to-purple-600 text-white px-6 py-2 rounded-full text-sm font-semibold hover:shadow-[0_0_20px_rgba(139,92,246,0.4)] transition-all"
+>
+  Get Started
+</button>
           </div>
         </div>
       </nav>
+  
 
       {/* ── HERO ── */}
       <section id="home" ref={heroRef} className="relative overflow-hidden pt-20 pb-24 px-6">
@@ -1821,19 +1837,12 @@ export default function App() {
             <p className="text-slate-400 text-lg mb-8 max-w-xl mx-auto">
               Join thousands of Gen Z and Millennial professionals who are using Evolvere AI guides to navigate the most important challenges of modern life.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button
-                onClick={handleGenerate}
-                disabled={generating}
-                className="bg-white text-violet-900 font-black px-8 py-4 rounded-2xl hover:shadow-2xl hover:bg-violet-50 transition-all text-lg"
+           <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button 
+                onClick={handleLogin}
+                className="bg-gradient-to-r from-violet-600 to-purple-600 text-white px-8 py-4 rounded-2xl font-black text-xl hover:shadow-[0_0_30px_rgba(139,92,246,0.6)] transition-all"
               >
-                {generating ? "Generating..." : "✨ Generate Free Guide Now"}
-              </button>
-              <button
-                onClick={() => setPaymentModal({ open: true, plan: "sage" })}
-                className="border border-violet-500/50 text-white font-bold px-8 py-4 rounded-2xl hover:bg-violet-500/10 transition-all text-lg"
-              >
-                Unlock All Guides
+                Get Started
               </button>
             </div>
           </div>
