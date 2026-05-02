@@ -8,12 +8,11 @@ interface ImportMetaEnv {
   readonly VITE_FIREBASE_APP_ID: string;
 }
 
-interface ImportMeta {
-  readonly env: ImportMetaEnv;
-}
+
 
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -28,3 +27,4 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 export const signInWithGoogle = () => signInWithPopup(auth, googleProvider);
+export const db = getFirestore(app);
