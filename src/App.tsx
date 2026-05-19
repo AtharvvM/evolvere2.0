@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { Analytics } from "@vercel/analytics/react";
 import { signInWithGoogle } from "./firebaseConfig";
 import { auth } from "./firebaseConfig";
 import { onAuthStateChanged, User } from "firebase/auth";
@@ -1442,12 +1443,13 @@ export default function App() {
   );
 
   return (
-    <div className="min-h-screen bg-[#06030e] flex font-sans">
-      <Sidebar />
-      <Sidebar mobile />
-      {sidebarOpen && <div className="fixed inset-0 z-40 bg-black/60 lg:hidden" onClick={() => setSidebarOpen(false)} />}
+    <>
+      <div className="min-h-screen bg-[#06030e] flex font-sans">
+        <Sidebar />
+        <Sidebar mobile />
+        {sidebarOpen && <div className="fixed inset-0 z-40 bg-black/60 lg:hidden" onClick={() => setSidebarOpen(false)} />}
 
-      <div className="flex-1 flex flex-col min-w-0">
+        <div className="flex-1 flex flex-col min-w-0">
         <header className="sticky top-0 z-30 bg-[#06030e]/80 backdrop-blur-xl border-b border-white/5 px-6 py-4 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-slate-500 hover:text-white p-1">
@@ -1533,7 +1535,9 @@ export default function App() {
             </>
           )}
         </main>
+        </div>
       </div>
-    </div>
+      <Analytics />
+    </>
   );
 }
